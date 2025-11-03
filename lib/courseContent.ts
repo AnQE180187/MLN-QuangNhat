@@ -1,3 +1,4 @@
+export const courseContent = `
 CÁC QUAN HỆ LỢI ÍCH KINH TẾ Ở VIỆT NAM
 1. Khái niệm và vai trò của lợi ích kinh tế
 ● Lợi ích kinh tế là sự thỏa mãn nhu cầu vật chất của con người thông qua hoạt động
@@ -142,7 +143,8 @@ Mục tiêu:
 → Tổng hợp vấn đề, gợi mở hướng đi và tạo ấn tượng kết thúc mạnh mẽ.
 —----------------------------------------------------------------------------------------------------------------------
 V. LIÊN HỆ THỰC TIỄN: Ví dụ và phân tích
-1. Ví dụ tích cực:○ Doanh nghiệp đầu tư sản xuất gắn với trách nhiệm xã hội (CSR): Vinamilk,
+1. Ví dụ tích cực:
+○ Doanh nghiệp đầu tư sản xuất gắn với trách nhiệm xã hội (CSR): Vinamilk,
 TH True Milk, Viettel…
 ○ Mô hình hợp tác công – tư (PPP) trong phát triển hạ tầng.
 2. Ví dụ tiêu cực:
@@ -246,3 +248,4 @@ Mục tiêu hướng tới:
 Xây dựng nền kinh tế thị trường định hướng xã hội chủ nghĩa, nơi lợi ích
 cá nhân hài hòa với lợi ích cộng đồng, góp phần tạo xã hội công bằng, văn
 minh và phát triển bền vững.
+`;
