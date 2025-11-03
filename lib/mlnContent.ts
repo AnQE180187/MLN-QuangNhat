@@ -190,42 +190,11 @@ export const courseChapters: LessonChapter[] = [
     id: "state",
     title: "Vai trò của Nhà nước trong điều tiết lợi ích",
     sections: [
+
       {
         id: "state-1",
-        title: "Công cụ điều tiết",
-        bullets: [
-          "Hệ thống pháp luật và chính sách",
-          "Thuế, phí và điều tiết thu nhập",
-          "An sinh xã hội và phúc lợi công",
-        ],
-        examples: [
-          {
-            title: "Thuế luỹ tiến",
-            description: "Điều tiết thu nhập, giảm chênh lệch giàu nghèo",
-            points: ["Mức thuế tăng theo thu nhập", "Nguồn lực cho phúc lợi"],
-            icon: "💰"
-          },
-          {
-            title: "Trợ cấp mục tiêu",
-            description: "Hỗ trợ nhóm yếu thế, đảm bảo an sinh",
-            points: ["BHYT hộ nghèo", "Hỗ trợ giáo dục"],
-            icon: "🛡️"
-          }
-        ]
-      },
-      {
-        id: "state-2",
-        title: "Mục tiêu điều tiết",
-        bullets: [
-          "Ổn định vĩ mô, tăng trưởng bền vững",
-          "Công bằng xã hội, giảm bất bình đẳng",
-          "Khuyến khích đổi mới, nâng cao năng suất",
-        ],
-      },
-      {
-        id: "state-3",
         title: "Nhà nước: Nhạc trưởng & Trọng tài",
-        body: "Nhà nước thiết lập luật chơi, đầu tư hạ tầng, điều tiết bằng thuế – chính sách; kiểm soát hành vi xấu và phân xử tranh chấp để đảm bảo công bằng, ổn định.",
+        body: "Nhà nước thiết lập pháp luật, đầu tư hạ tầng, điều tiết bằng thuế – chính sách; kiểm soát Hành vi xấu và phân xử tranh chấp để đảm bảo công bằng, ổn định.",
         bullets: [
           "Bảo vệ và mở đường: pháp luật, hạ tầng, định hướng",
           "Điều hòa lợi ích: thuế, phúc lợi, đảm bảo mức sống tối thiểu",
