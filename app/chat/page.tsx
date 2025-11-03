@@ -4,164 +4,169 @@ import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { searchSections } from '@/lib/mlnContent';
 import { getGemini, buildRagPrompt } from '@/lib/geminiClient';
-import { extractPdfText, chunkPages } from '@/lib/pdfClient';
-import { buildIndex, search as searchIndex, chunkText } from '@/lib/indexer';
 
 type Message = { role: 'user' | 'assistant'; content: string };
+type GeminiModel = 'gemini-2.5-flash' | 'gemini-1.5-pro';
 
 export default function ChatPage() {
-  const extractJson = (raw: string): any | null => {
-    try {
-      const fenced = raw.match(/```json[\s\S]*?```/i);
-      const body = fenced ? fenced[0].replace(/```json|```/gi, '') : raw;
-      return JSON.parse(body);
-    } catch {
-      return null;
-    }
-  };
-
-  const formatQnAFromJson = (obj: any): { question?: string; answer?: string; explain?: string; text: string } => {
-    const q = obj?.question ?? obj?.Q ?? obj?.prompt;
-    const a = obj?.answer ?? obj?.A ?? obj?.solution;
-    const e = obj?.explain ?? obj?.explanation ?? obj?.why;
-    const parts: string[] = [];
-    if (q) parts.push(`Câu hỏi: ${q}`);
-    if (a) parts.push(`Đáp án gợi ý: ${a}`);
-    if (e) parts.push(`Giải thích: ${e}`);
-    return { question: q, answer: a, explain: e, text: parts.join('\n') || String(obj) };
-  };
-
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Xin chào! Hãy hỏi tôi bất kỳ điều gì về nội dung môn MLN122.' },
+    { role: 'assistant', content: 'Xin chào! Tôi sẽ trả lời các câu hỏi dựa trên nội dung của file content.txt.' },
   ]);
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [content, setContent] = useState<string>('');
+  const [contentLoaded, setContentLoaded] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  // Gemini state
   const [useGemini, setUseGemini] = useState(true);
-  const [model, setModel] = useState<'gemini-2.5-flash' | 'gemini-1.5-pro'>('gemini-2.5-flash');
-  const [pdfReady, setPdfReady] = useState(false);
-  const [building, setBuilding] = useState(false);
-  const [pdfIndex, setPdfIndex] = useState<ReturnType<typeof buildIndex> | null>(null);
-  const [txtIndex, setTxtIndex] = useState<ReturnType<typeof buildIndex> | null>(null);
-  // Tutor mode removed per request
+  const [model, setModel] = useState<GeminiModel>('gemini-2.5-flash');
 
-  const buildPdf = async () => {
-    try {
-      setBuilding(true);
-      // Default PDF path in project root/public
-      const url = '/mln.pdf';
-      const res = await extractPdfText(url);
-      const chunks = chunkPages(res.pages);
-      const docs = chunks.map((c) => ({ id: c.id, text: c.text, meta: { page: c.page } }));
-      const idx = buildIndex(docs);
-      setPdfIndex(idx);
-      setPdfReady(true);
-      setMessages((m) => [...m, { role: 'assistant', content: `Đã xây chỉ mục PDF (${res.pages.length} trang, ${docs.length} đoạn). Bạn có thể đặt câu hỏi.` }]);
-    } catch (e) {
-      setMessages((m) => [...m, { role: 'assistant', content: 'Không thể đọc PDF. Hãy đảm bảo file mln.pdf nằm trong thư mục public/.' }]);
-    } finally {
-      setBuilding(false);
-    }
-  };
-
-  const buildTxt = async () => {
-    try {
-      setBuilding(true);
-      const res = await fetch('/content.txt');
-      if (!res.ok) throw new Error('Không tìm thấy content.txt');
-      const text = await res.text();
-      const docs = chunkText(text);
-      const idx = buildIndex(docs);
-      setTxtIndex(idx);
-      // Silent success; avoid flooding chat on first load
-    } catch (e) {
-      setMessages((m) => [...m, { role: 'assistant', content: 'Không thể đọc content.txt. Hãy chắc chắn file nằm ở thư mục public/.' }]);
-    } finally {
-      setBuilding(false);
-    }
-  };
-
+  // Load content.txt
   useEffect(() => {
-    // Auto-build TXT index on first visit
-    if (!txtIndex) {
-      buildTxt();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const loadContent = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/content.txt');
+        if (!res.ok) {
+          throw new Error('Không tìm thấy file nội dung ');
+        }
+        const text = await res.text();
+        setContent(text);
+        setContentLoaded(true);
+        setMessages((m) => [...m, { role: 'assistant', content: 'Đã tải xong nội dung. Bạn có thể bắt đầu đặt câu hỏi.' }]);
+      } catch (e: any) {
+        const errorMsg = `Lỗi khi tải content.txt: ${e.message}`;
+        setLoadError(errorMsg);
+        setMessages((m) => [...m, { role: 'assistant', content: errorMsg }]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadContent();
   }, []);
 
-  // Context helper (unused now) removed
+  const findSimilarParagraphs = (query: string, text: string, count = 3) => {
+    const q = query.toLowerCase().trim();
+    if (!q || !text) return [];
 
-  // askQuestion removed
+    const paragraphs = text.split(/\n{2,}|\r\n{2,}/).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+
+    const scored = paragraphs
+      .map((p) => {
+        const pLower = p.toLowerCase();
+        let score = 0;
+        // Simple scoring: add points for each query word found
+        q.split(/\s+/).forEach((w) => {
+          if (pLower.includes(w)) {
+            score++;
+          }
+        });
+        // Boost score for exact phrase match
+        if (pLower.includes(q)) {
+          score += 5;
+        }
+        return { paragraph: p, score };
+      })
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, count);
+
+    return scored.map(x => x.paragraph);
+  };
+
+  const askGemini = async (q: string) => {
+    if (!contentLoaded) {
+      setMessages((m) => [...m, { role: 'assistant', content: 'Nội dung chưa được tải. Vui lòng chờ hoặc kiểm tra lỗi.' }]);
+      return;
+    }
+    const gemini = getGemini(model);
+    if (!gemini) {
+      setMessages((m) => [...m, { role: 'assistant', content: 'Chưa định cấu hình Gemini API Key. Hãy thêm NEXT_PUBLIC_GEMINI_API_KEY vào file .env.local.' }]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const contextParagraphs = findSimilarParagraphs(q, content);
+      let context = 'Không tìm thấy đoạn nào liên quan trực tiếp trong nội dung của bài. Hãy trả lời dựa trên kiến thức chung của bạn về chủ đề được hỏi.';
+      if (contextParagraphs.length > 0) {
+        context = `Dựa vào các trích đoạn sau từ tài liệu:\n\n---\n\n` + contextParagraphs.join('\n\n---\n\n');
+      }
+
+      const prompt = buildRagPrompt({ question: q, context });
+
+      const result = await gemini.generateContent({ contents: prompt });
+      const response = result.response;
+      const text = response.text();
+
+      const reply = `${text}\n\n*Nguồn: MLN122*`;
+      setMessages((m) => [...m, { role: 'assistant', content: reply }]);
+
+    } catch (e: any) {
+      setMessages((m) => [...m, { role: 'assistant', content: `Lỗi khi gọi Gemini: ${e.message}` }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const askLegacy = async (q: string) => {
+    setLoading(true);
+    try {
+      const matches = findSimilarParagraphs(q, content);
+      if (matches.length > 0) {
+        const reply = `Mình tìm thấy trong content.txt (trích đoạn):\n\n` + matches.map(p => `• ${p.length > 250 ? p.slice(0, 250) + '…' : p}`).join('\n\n');
+        setMessages((m) => [...m, { role: 'assistant', content: reply }]);
+      } else {
+        setMessages((m) => [...m, { role: 'assistant', content: 'Mình chưa thấy nội dung này trong content.txt.' }]);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const ask = async () => {
     const q = question.trim();
     if (!q) return;
     setQuestion('');
     setMessages((m) => [...m, { role: 'user', content: q }]);
-    setLoading(true);
-    try {
-      // Tutor grading removed
 
-      const topSeed = searchSections(q, 6);
-      const topPdf = pdfIndex ? searchIndex(pdfIndex, q, 6) : [];
-      const topTxt = txtIndex ? searchIndex(txtIndex, q, 6) : [];
-      const top = topPdf.length
-        ? topPdf.map(d => ({ title: `PDF trang ${d.meta?.page}`, bullets: [d.text] }))
-        : (topTxt.length ? topTxt.map(d => ({ title: 'TXT', bullets: [d.text] })) : topSeed);
-      if (!useGemini) {
-        if (top.length === 0) {
-          setMessages((m) => [...m, { role: 'assistant', content: 'Mình chưa tìm thấy thông tin phù hợp. Hãy thử diễn đạt khác hoặc cụ thể hơn nhé.' }]);
-          return;
-        }
-        const answer = `Mình tìm được một số điểm chính liên quan:\n\n` +
-          top.map((s) => `• ${s.title}${s.bullets && s.bullets.length ? `: ${s.bullets[0]}` : ''}`).join('\n') +
-          `\n\n(Bạn có thể mở mục tương ứng ở phần Nội dung để xem chi tiết.)`;
-        setMessages((m) => [...m, { role: 'assistant', content: answer }]);
-        return;
-      }
-
-      const ctx = top.map((s) => {
-        const bullets = (s.bullets ?? []).map((b) => `- ${b}`).join('\n');
-        return `# ${s.title}\n${bullets}`;
-      }).join('\n\n');
-      const modelInst = getGemini(model);
-      if (!modelInst) {
-        setMessages((m) => [...m, { role: 'assistant', content: 'Chưa cấu hình khóa Gemini. Vui lòng thêm NEXT_PUBLIC_GEMINI_API_KEY trong .env.local.' }]);
-        return;
-      }
-      const promptParts = buildRagPrompt({ question: q, context: ctx });
-      const result = await modelInst.generateContent({ contents: [{ role: 'user', parts: promptParts }] });
-      const text = (await result.response).text();
-      setMessages((m) => [...m, { role: 'assistant', content: text }]);
-    } finally {
-      setLoading(false);
+    if (useGemini) {
+      await askGemini(q);
+    } else {
+      await askLegacy(q);
     }
   };
+
+  const isInputDisabled = loading || !contentLoaded;
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50">
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-montserrat font-semibold text-slate-900 mb-4">Chatbot học tập</h1>
-          {/* Tutor mode UI removed */}
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            {/* <label className="text-sm text-slate-700 flex items-center gap-2">
-              <input type="checkbox" checked={useGemini} onChange={(e) => setUseGemini(e.target.checked)} />
-              Dùng Gemini
-            </label>
-            <select
-              className="border rounded px-2 py-1 text-sm"
-              value={model}
-              onChange={(e) => setModel(e.target.value as any)}
-              disabled={!useGemini}
-            >
-              <option value="gemini-1.5-flash">gemini-1.5-flash (nhanh)</option>
-              <option value="gemini-1.5-pro">gemini-1.5-pro (chất lượng)</option>
-            </select> */}
+
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            {/* <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-700 flex items-center gap-2">
+                <input type="checkbox" checked={useGemini} onChange={(e) => setUseGemini(e.target.checked)} />
+                Dùng Gemini
+              </label>
+              <select
+                className="border rounded px-2 py-1 text-sm bg-white disabled:bg-slate-100"
+                value={model}
+                onChange={(e) => setModel(e.target.value as any)}
+                disabled={!useGemini}
+              >
+                <option value="gemini-1.5-flash">gemini-1.5-flash (nhanh)</option>
+                <option value="gemini-1.5-pro">gemini-1.5-pro (chất lượng)</option>
+              </select>
+            </div> */}
           </div>
 
-          {building && <div className="mb-2 text-sm text-slate-500">Đang chuẩn bị dữ liệu học (content.txt)...</div>}
+          {loadError && <div className="mb-2 text-sm text-red-500">Lỗi: {loadError}</div>}
 
           <Card className="p-4 md:p-6 h-[60vh] overflow-y-auto space-y-3">
             {messages.map((m, idx) => (
@@ -175,26 +180,34 @@ export default function ChatPage() {
                 </div>
               </div>
             ))}
-            {loading && <div className="text-sm text-slate-500">Đang tìm trong tài liệu...</div>}
+            {loading && <div className="text-sm text-slate-500">Đang tải và xử lý...</div>}
           </Card>
-          {pdfReady && (
-            <div className="mt-2 text-xs text-slate-500">Gợi ý: Câu trả lời sẽ tham chiếu các trang PDF liên quan (hiển thị trong nội dung trả lời).</div>
-          )}
+          <div className="mt-2 text-xs text-slate-500">
+            {useGemini
+              ? 'Trả lời bằng Gemini AI dựa trên file content.txt.'
+              : 'Tìm kiếm trong file content.txt.'}
+          </div>
           <div className="mt-3 flex gap-2">
             <Input
               placeholder="Nhập câu hỏi về bài học..."
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') ask(); }}
+              disabled={isInputDisabled}
             />
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white" onClick={ask} disabled={loading}>Hỏi</Button>
+            <Button
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+              onClick={ask}
+              disabled={isInputDisabled}
+            >
+              Hỏi
+            </Button>
           </div>
-          <div className="text-xs text-slate-500 mt-2">Bạn có thể bật/tắt Gemini. Khi bật, trợ lý sẽ trả lời dựa trên ngữ cảnh trích từ nội dung môn học.</div>
+          <div className="text-xs text-slate-500 mt-2">
+            Trợ lý AI trả lời dựa trên ngữ cảnh trích từ nội dung của web.
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-

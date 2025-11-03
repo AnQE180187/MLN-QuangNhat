@@ -18,13 +18,11 @@ export function buildRagPrompt(parts: { question: string; context: string; instr
     'Bạn là trợ lý học tập cho môn MLN122. Trả lời ngắn gọn, chính xác, dựa trên NGỮ CẢNH cho trước. ' +
     'Nếu thông tin không có trong NGỮ CẢNH, hãy nói không chắc và gợi ý mục liên quan.'
   );
-  return [
-    { text: system },
-    { text: '\n\nNGỮ CẢNH:' },
-    { text: parts.context.slice(0, 8000) },
-    { text: '\n\nCÂU HỎI:' },
-    { text: parts.question }
-  ];
+
+  const userPrompt = `${system}\n\nNGỮ CẢNH:\n${parts.context.slice(0, 15000)}\n\nCÂU HỎI:\n${parts.question}`;
+
+  // The contents array should contain a single Content object for a simple request.
+  return [{ role: 'user', parts: [{ text: userPrompt }] }];
 }
 
 
