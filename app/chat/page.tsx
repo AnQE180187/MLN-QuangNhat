@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,10 +44,7 @@ export default function ChatPage() {
   const [building, setBuilding] = useState(false);
   const [pdfIndex, setPdfIndex] = useState<ReturnType<typeof buildIndex> | null>(null);
   const [txtIndex, setTxtIndex] = useState<ReturnType<typeof buildIndex> | null>(null);
-  const [tutorMode, setTutorMode] = useState(false);
-  const [topic, setTopic] = useState('');
-  const [difficulty, setDifficulty] = useState<'dễ' | 'trung bình' | 'khó'>('trung bình');
-  const [currentQuestion, setCurrentQuestion] = useState<{ text: string; answer?: string; context?: string } | null>(null);
+  // Tutor mode removed per request
 
   const buildPdf = async () => {
     try {
@@ -77,52 +74,25 @@ export default function ChatPage() {
       const docs = chunkText(text);
       const idx = buildIndex(docs);
       setTxtIndex(idx);
-      setMessages((m) => [...m, { role: 'assistant', content: `Đã xây chỉ mục từ content.txt (${docs.length} đoạn). Bạn có thể đặt câu hỏi.` }]);
+      // Silent success; avoid flooding chat on first load
     } catch (e) {
-      setMessages((m) => [...m, { role: 'assistant', content: 'Không thể đọc content.txt. Hãy chắc chắn file nằm ở thư mục gốc/public.' }]);
+      setMessages((m) => [...m, { role: 'assistant', content: 'Không thể đọc content.txt. Hãy chắc chắn file nằm ở thư mục public/.' }]);
     } finally {
       setBuilding(false);
     }
   };
 
-  const getContextChunks = (hint: string) => {
-    const topSeed = searchSections(hint || 'MLN122', 6);
-    const topPdf = pdfIndex ? searchIndex(pdfIndex, hint || 'MLN122', 6) : [];
-    const topTxt = txtIndex ? searchIndex(txtIndex, hint || 'MLN122', 6) : [];
-    if (topPdf.length) return topPdf.map((d) => d.text).join('\n');
-    if (topTxt.length) return topTxt.map((d) => d.text).join('\n');
-    return topSeed.map((s) => `${s.title}: ${(s.bullets ?? []).join('; ')}`).join('\n');
-  };
+  useEffect(() => {
+    // Auto-build TXT index on first visit
+    if (!txtIndex) {
+      buildTxt();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const askQuestion = async () => {
-    setCurrentQuestion(null);
-    const hint = topic.trim();
-    const ctx = getContextChunks(hint);
-    if (!useGemini) {
-      const fallback = `Hãy giải thích: ${hint || 'Trình bày lợi ích kinh tế và vai trò điều tiết của Nhà nước.'}`;
-      setMessages((m) => [...m, { role: 'assistant', content: `Câu hỏi: ${fallback}` }]);
-      setCurrentQuestion({ text: fallback, context: ctx });
-      return;
-    }
-    const modelInst = getGemini(model);
-    if (!modelInst) {
-      setMessages((m) => [...m, { role: 'assistant', content: 'Chưa cấu hình khóa Gemini. Không thể tạo câu hỏi.' }]);
-      return;
-    }
-    const instr = `Bạn là trợ lý luyện tập. Tạo 1 câu hỏi ${difficulty} về môn MLN122 dựa trên NGỮ CẢNH. Trả về JSON với các field: question, answer, explain. Không thêm văn bản ngoài JSON.`;
-    const parts = buildRagPrompt({ question: `Chủ đề: ${hint || 'tổng quan MLN122'}`, context: ctx, instructions: instr });
-    const res = await modelInst.generateContent({ contents: [{ role: 'user', parts }] });
-    const text = (await res.response).text();
-    const maybe = extractJson(text);
-    if (maybe) {
-      const fmt = formatQnAFromJson(maybe);
-      setMessages((m) => [...m, { role: 'assistant', content: fmt.text }]);
-      setCurrentQuestion({ text: fmt.question ?? 'Câu hỏi', answer: fmt.answer, context: ctx });
-    } else {
-      setMessages((m) => [...m, { role: 'assistant', content: `Câu hỏi: ${text.replace(/```json|```/gi, '').trim()}` }]);
-      setCurrentQuestion({ text: text.replace(/```json|```/gi, '').trim(), context: ctx });
-    }
-  };
+  // Context helper (unused now) removed
+
+  // askQuestion removed
 
   const ask = async () => {
     const q = question.trim();
@@ -131,27 +101,7 @@ export default function ChatPage() {
     setMessages((m) => [...m, { role: 'user', content: q }]);
     setLoading(true);
     try {
-      // If in tutor mode and we have a pending question, treat user's message as an answer to grade
-      if (tutorMode && currentQuestion) {
-        if (!useGemini) {
-          setMessages((m) => [...m, { role: 'assistant', content: 'Đã ghi nhận câu trả lời. Hãy bật Gemini để nhận chấm điểm và giải thích chi tiết.' }]);
-          setCurrentQuestion(null);
-          return;
-        }
-        const modelInst = getGemini(model);
-        if (!modelInst) {
-          setMessages((m) => [...m, { role: 'assistant', content: 'Chưa cấu hình khóa Gemini.' }]);
-          return;
-        }
-        const gradeInstr = 'Bạn là giám khảo. Dựa trên NGỮ CẢNH và ĐÁP ÁN CHUẨN (nếu có), hãy chấm câu trả lời của học viên ngắn gọn (Đúng/Sai + vì sao) và giải thích dễ hiểu. Trả lời ngắn gọn.';
-        const ctx = `${currentQuestion.context ?? ''}\n\nCÂU HỎI: ${currentQuestion.text}\nĐÁP ÁN CHUẨN: ${currentQuestion.answer ?? '(không có)'}\nCÂU TRẢ LỜI CỦA HỌC VIÊN: ${q}`;
-        const parts = buildRagPrompt({ question: 'Chấm điểm và giải thích', context: ctx, instructions: gradeInstr });
-        const res = await modelInst.generateContent({ contents: [{ role: 'user', parts }] });
-        const text = (await res.response).text();
-        setMessages((m) => [...m, { role: 'assistant', content: text }]);
-        setCurrentQuestion(null);
-        return;
-      }
+      // Tutor grading removed
 
       const topSeed = searchSections(q, 6);
       const topPdf = pdfIndex ? searchIndex(pdfIndex, q, 6) : [];
@@ -194,32 +144,7 @@ export default function ChatPage() {
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-montserrat font-semibold text-slate-900 mb-4">Chatbot học tập</h1>
-          <div className="mb-3 flex flex-wrap items-center gap-3">
-            <label className="text-sm text-slate-700 flex items-center gap-2">
-              <input type="checkbox" checked={tutorMode} onChange={(e) => setTutorMode(e.target.checked)} />
-              Chế độ luyện tập (AI đặt câu hỏi)
-            </label>
-            {tutorMode && (
-              <>
-                <input
-                  className="border rounded px-2 py-1 text-sm flex-1 min-w-[160px]"
-                  placeholder="Chủ đề mong muốn (ví dụ: quan hệ lợi ích)"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                />
-                <select
-                  className="border rounded px-2 py-1 text-sm"
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value as any)}
-                >
-                  <option value="dễ">Dễ</option>
-                  <option value="trung bình">Trung bình</option>
-                  <option value="khó">Khó</option>
-                </select>
-                <Button size="sm" onClick={askQuestion} className="bg-orange-500 hover:bg-orange-600 text-white">Đặt câu hỏi</Button>
-              </>
-            )}
-          </div>
+          {/* Tutor mode UI removed */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
             {/* <label className="text-sm text-slate-700 flex items-center gap-2">
               <input type="checkbox" checked={useGemini} onChange={(e) => setUseGemini(e.target.checked)} />
@@ -236,17 +161,7 @@ export default function ChatPage() {
             </select> */}
           </div>
 
-          <div className="mb-2 flex flex-wrap items-center gap-2">
-            <Button variant="outline" size="sm" onClick={buildPdf} disabled={building}>
-              {pdfReady ? 'Xây lại chỉ mục PDF' : 'Xây chỉ mục PDF'}
-            </Button>
-            <Button variant="outline" size="sm" onClick={buildTxt} disabled={building}>
-              Xây chỉ mục TXT
-            </Button>
-            {building && <span className="text-sm text-slate-500">Đang xử lý...</span>}
-            {pdfReady && <span className="text-sm text-green-600">PDF sẵn sàng</span>}
-            {txtIndex && <span className="text-sm text-green-600">TXT sẵn sàng</span>}
-          </div>
+          {building && <div className="mb-2 text-sm text-slate-500">Đang chuẩn bị dữ liệu học (content.txt)...</div>}
 
           <Card className="p-4 md:p-6 h-[60vh] overflow-y-auto space-y-3">
             {messages.map((m, idx) => (
