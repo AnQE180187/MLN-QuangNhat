@@ -1,6 +1,16 @@
-Image with src "https://placehold.co/1200x600/ffffff/e2e8f0?text=Do+thi+thi+truong" has legacy prop "layout". Did you forget to run the codemod?
-Read more: https://nextjs.org/docs/messages/next-image-upgrade-to-13
-Image with src "https://placehold.co/1200x600/ffffff/e2e8f0?text=Do+thi+thi+truong" has legacy prop "objectFit". Did you forget to run the codemod?
-Read more: https://nextjs.org/docs/messages/next-image-upgrade-to-13
- GET /content 200 in 4.8s (compile: 3.9s, render: 910ms)
- ⨯ The requested resource "https://placehold.co/500x300/e2e8f0/64748b?text=Hinh+minh+hoa" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+Failed to compile.
+
+./app/chat/page.tsx:105:51
+Type error: Argument of type '{ contents: { text: string; }[]; }' is not assignable to parameter of type 'string | GenerateContentRequest | (string | Part)[]'.
+  Types of property 'contents' are incompatible.
+    Type '{ text: string; }[]' is not assignable to type 'Content[]'.
+      Type '{ text: string; }' is missing the following properties from type 'Content': role, parts
+
+  103 |       const prompt = buildRagPrompt({ question: q, context });
+  104 |
+> 105 |       const result = await gemini.generateContent({ contents: prompt });
+      |                                                   ^
+  106 |       const response = result.response;
+  107 |       const text = response.text();
+  108 |
+Next.js build worker exited with code: 1 and signal: null
