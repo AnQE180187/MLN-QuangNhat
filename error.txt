@@ -1,0 +1,6 @@
+Image with src "https://placehold.co/1200x600/ffffff/e2e8f0?text=Do+thi+thi+truong" has legacy prop "layout". Did you forget to run the codemod?
+Read more: https://nextjs.org/docs/messages/next-image-upgrade-to-13
+Image with src "https://placehold.co/1200x600/ffffff/e2e8f0?text=Do+thi+thi+truong" has legacy prop "objectFit". Did you forget to run the codemod?
+Read more: https://nextjs.org/docs/messages/next-image-upgrade-to-13
+ GET /content 200 in 4.8s (compile: 3.9s, render: 910ms)
+ ⨯ The requested resource "https://placehold.co/500x300/e2e8f0/64748b?text=Hinh+minh+hoa" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.

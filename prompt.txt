@@ -1,0 +1,196 @@
+Thiết kế trang Nội dung học (Content Page) cho website học tập MLN122 – Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam theo phong cách slide trình chiếu cuộn dọc.
+Mỗi phần nội dung là một “slide” toàn màn hình (full viewport height), khi người dùng scroll xuống thì thấy phần kế tiếp, giống trải nghiệm trình chiếu dọc.
+
+🎯 Mục tiêu thiết kế
+
+Giao diện trình bày nội dung học như slide bài giảng sinh động, có nhiều hình ảnh minh họa, icon, biểu đồ, bố cục trực quan.
+
+Dễ đọc, trực quan, gây hứng thú khi học.
+
+Phù hợp để hiển thị 9 phần nội dung môn MLN122.
+
+Thanh mục lục (sidebar) được ẩn, chỉ mở khi bấm nút gần header.
+
+🧱 Bố cục tổng thể
+
+Kích thước khung: Web desktop 1440×900 px, responsive.
+
+Tone màu:
+
+Màu chính: Cam FPT (#F97316)
+
+Nền sáng (#F9FAFB)
+
+Chữ: Slate 900 (#1E293B)
+
+Nền slide xen kẽ trắng & xám nhạt để tạo nhịp thị giác.
+
+Phong cách: Modern educational, giống slide trình chiếu Canva hoặc Apple style.
+
+Font: Poppins hoặc Montserrat cho tiêu đề, Inter cho nội dung.
+
+Cảm giác: Trình bày chuyên nghiệp, sinh viên dễ xem như bài thuyết trình.
+
+🧩 Cấu trúc trang
+🔹 Header cố định trên cùng
+
+Logo “MLN122” (text hoặc icon học tập).
+
+Tiêu đề nhỏ: “Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam”.
+
+Nút mở mục lục (icon 📑 hoặc ☰) ở góc phải → khi bấm sẽ hiện popup sidebar chứa 9 phần mục lục.
+
+🔹 Sidebar ẩn (Slide Menu)
+
+Khi bật, trượt từ trái sang phải.
+
+Gồm 9 phần:
+
+Khái niệm & Vai trò
+
+Các loại lợi ích
+
+Quan hệ cơ bản
+
+Mâu thuẫn & Thống nhất
+
+Nhân tố ảnh hưởng
+
+Phương thức thực hiện
+
+Quan điểm Đảng & Nhà nước
+
+Liên hệ thực tiễn
+
+Kết luận – Giải pháp
+
+📖 Các “Slide” nội dung (scroll section)
+
+Mỗi phần = 1 slide (full height 100vh) có bố cục đẹp, nhiều hình ảnh và điểm nhấn.
+
+🟠 Slide 1 – Khái niệm & Vai trò
+
+Hình minh họa vector người lao động, nhà máy, biểu đồ tăng trưởng.
+
+Tiêu đề lớn: “Lợi ích kinh tế là động lực của phát triển”.
+
+2 card: “Lợi ích vật chất” & “Lợi ích tinh thần”, icon 💰 và 🌟.
+
+Background sáng, hiệu ứng scroll parallax nhẹ.
+
+🟢 Slide 2 – Các loại lợi ích
+
+Tiêu đề: “Các loại lợi ích và mối quan hệ giữa chúng”.
+
+Sơ đồ tròn (Venn) minh họa 3 nhóm: Cá nhân – Tập thể – Xã hội.
+
+Text ngắn mô tả sự thống nhất và mâu thuẫn.
+
+🔵 Slide 3 – Các quan hệ cơ bản
+
+Tiêu đề: “Các quan hệ lợi ích kinh tế chủ yếu”.
+
+4 cột ngang, mỗi cột 1 quan hệ:
+
+Lao động ↔ Sử dụng lao động
+
+Doanh nghiệp ↔ Doanh nghiệp
+
+Người lao động ↔ Người lao động
+
+Cá nhân ↔ Xã hội
+
+Icon minh họa mỗi cặp.
+
+Màu nền xen kẽ trắng/xám.
+
+🟣 Slide 4 – Mâu thuẫn & Thống nhất
+
+Minh họa hình cân bằng (⚖️) và mâu thuẫn (⚡).
+
+Text ngắn mô tả cách Nhà nước điều tiết để hài hòa lợi ích.
+
+Có hiệu ứng phân chia slide bằng đường cong hoặc gradient.
+
+🟤 Slide 5 – Nhân tố ảnh hưởng
+
+Sử dụng hình ảnh biểu tượng công nghệ, hội nhập, chính sách.
+
+5 icon lớn: lực lượng sản xuất, quan hệ sản xuất, phân phối, pháp luật, hội nhập quốc tế.
+
+Mỗi icon có mô tả ngắn.
+
+🟢 Slide 6 – Phương thức thực hiện
+
+Tiêu đề: “Theo cơ chế thị trường & chính sách Nhà nước”.
+
+2 card song song, mỗi card mô tả một phương thức, có icon và ví dụ.
+
+Hình nền: đồ thị thị trường, bàn tay Nhà nước điều tiết.
+
+🟠 Slide 7 – Quan điểm Đảng & Nhà nước
+
+Nền cam nhẹ.
+
+Tiêu đề lớn, typography đậm.
+
+Minh họa Nhà nước là “Nhạc trưởng & Trọng tài kinh tế”.
+
+3 bullet chính: Đặt lợi ích nhân dân lên đầu, Hài hòa cá nhân – xã hội, Chống lợi ích nhóm tiêu cực.
+
+🔵 Slide 8 – Liên hệ thực tiễn
+
+3 card song song:
+
+Vinamilk – CSR và an sinh
+
+Viettel – Chuyển đổi số
+
+TH True Milk – Nông nghiệp xanh
+
+Ảnh minh họa thực tế, caption ngắn, tone tươi sáng.
+
+🔴 Slide 9 – Kết luận & Giải pháp
+
+Nền cam sáng (#FED7AA).
+
+Typography lớn, đậm, hiệu ứng fade-in.
+
+4 giải pháp:
+
+Nâng cao vai trò Nhà nước pháp quyền.
+
+Minh bạch hóa lợi ích.
+
+Phát triển CSR.
+
+Giáo dục đạo đức kinh doanh.
+
+Dòng kết: “Hướng tới nền kinh tế thị trường định hướng XHCN – Công bằng, Văn minh, Bền vững.”
+
+⚙️ Yêu cầu kỹ thuật Figma
+
+Mỗi slide là 1 frame cao 100vh, có auto layout, scroll chaining.
+
+Ảnh minh họa vector/flat style, bố cục trung tâm, có hiệu ứng gradient nhẹ.
+
+Mục lục là popup ẩn (component riêng).
+
+Header cố định.
+
+Font size:
+
+H1: 48px
+
+H2: 28px
+
+Body: 18px
+
+Kết quả mong muốn
+
+
+Có header + nút mở mục lục ẩn.
+
+Mỗi phần có hình ảnh, màu sắc, bố cục khác nhau nhưng thống nhất phong cách.
+
+Cảm giác như đang scroll xem slide trình chiếu sinh động.
