@@ -1,54 +1,47 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getGeminiFlashModel } from '../../lib/geminiClient';
+import { Send, MessageCircle, Sparkles } from 'lucide-react';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { MessageCircle, Send, Sparkles } from 'lucide-react';
-import { getGemini, buildRagPrompt } from '@/lib/geminiClient';
 
-type Message = { role: 'user' | 'assistant'; content: string };
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+};
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Xin chào! Tôi là trợ lý AI chuyên về chủ đề "Lợi ích kinh tế – động lực phát triển hay nguồn gốc của mâu thuẫn xã hội?". Hãy đặt câu hỏi cho tôi.' },
-  ]);
-  const [question, setQuestion] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [question, setQuestion] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const askGemini = async (q: string) => {
-    const gemini = getGemini(); // Uses the default 'gemini-2.5-flash'
-    if (!gemini) {
-      setMessages((m) => [...m, { role: 'assistant', content: 'Chưa định cấu hình Gemini API Key. Hãy thêm NEXT_PUBLIC_GEMINI_API_KEY vào file .env.local.' }]);
-      return;
-    }
+  const ask = async () => {
+    if (!question.trim() || loading) return;
 
     setLoading(true);
+    const userMessage: Message = { role: 'user', content: question };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setQuestion('');
+
     try {
-      const instructions = 'Bạn là một trợ lý AI chuyên về triết học Mác-Lênin. Hãy trả lời câu hỏi của người dùng một cách chi tiết, chính xác và sư phạm. Câu trả lời của bạn phải tập trung hoàn toàn vào chủ đề "Lợi ích kinh tế – động lực phát triển hay nguồn gốc của mâu thuẫn xã hội?". Tuyệt đối không sử dụng thông tin bên ngoài, chỉ dựa vào kiến thức đã được huấn luyện của bạn.';
+      const fullPrompt = `Bạn là một trợ lý AI chuyên sâu về triết học Mác-Lênin. Chỉ trả lời các câu hỏi liên quan đến chủ đề 'lợi ích kinh tế' trong triết học Mác-Lênin. Nếu câu hỏi không liên quan, hãy lịch sự từ chối và yêu cầu người dùng hỏi về chủ đề chính. Câu hỏi của người dùng: ${question}`;
 
-      const prompt = buildRagPrompt({ question: q, instructions });
+      const model = getGeminiFlashModel();
+      const result = await model.generateContent(fullPrompt);
+      const text = result.response.text();
 
-      const result = await gemini.generateContent({ contents: prompt });
-      const response = result.response;
-      const text = response.text();
-
-      setMessages((m) => [...m, { role: 'assistant', content: text }]);
-
-    } catch (e: any) {
-      setMessages((m) => [...m, { role: 'assistant', content: `Lỗi khi gọi Gemini: ${e.message}` }]);
+      const assistantMessage: Message = { role: 'assistant', content: text };
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+    } catch (error) {
+      console.error('Error generating content:', error);
+      const errorMessage: Message = { role: 'assistant', content: 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.' };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setLoading(false);
     }
-  };
-
-  const ask = async () => {
-    const q = question.trim();
-    if (!q) return;
-    setQuestion('');
-    setMessages((m) => [...m, { role: 'user', content: q }]);
-    await askGemini(q);
   };
 
   return (

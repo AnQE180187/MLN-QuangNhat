@@ -1,23 +1,20 @@
-'use client';
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-let cachedModel: ReturnType<GoogleGenerativeAI['getGenerativeModel']> | null = null;
-
-export function getGemini(model = 'gemini-2.5-flash') {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-  if (!apiKey) return null;
-  // Avoid re-initializing the model on every call
-  if (cachedModel) return cachedModel;
-  const genAI = new GoogleGenerativeAI(apiKey);
-  cachedModel = genAI.getGenerativeModel({ model });
-  return cachedModel;
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not set in environment variables.");
 }
 
-export function buildRagPrompt(parts: { question: string; instructions?: string }) {
-  const system = parts.instructions ?? 'Bạn là một trợ lý AI hữu ích. Hãy trả lời câu hỏi của người dùng.';
+const genAI = new GoogleGenerativeAI(apiKey);
 
-  const userPrompt = `${system}\n\nCÂU HỎI:\n${parts.question}`;
+let model: GenerativeModel;
 
-  return [{ role: 'user', parts: [{ text: userPrompt }] }];
+export function getGeminiFlashModel(): GenerativeModel {
+  if (!model) {
+    model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+    });
+  }
+  return model;
 }
