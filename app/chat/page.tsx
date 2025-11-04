@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { MessageCircle, Send, Sparkles } from 'lucide-react';
 import { getGemini, buildRagPrompt } from '@/lib/geminiClient';
 import { courseContent } from '@/lib/courseContent'; // Import content directly
 
@@ -163,54 +165,112 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-slate-50">
-      <div className="container mx-auto px-4 py-6 md:py-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-montserrat font-semibold text-slate-900 mb-4">Chatbot học tập</h1>
-
-          <div className="mb-3 flex flex-wrap items-center gap-3">
-
-          </div>
-
-          <Card className="p-4 md:p-6 h-[60vh] overflow-y-auto space-y-3">
-            {messages.map((m, idx) => (
-              <div key={idx} className={m.role === 'assistant' ? 'text-slate-800' : 'text-slate-900'}>
-                <div className="text-xs text-slate-500 mb-1">{m.role === 'assistant' ? 'Trợ lý' : 'Bạn'}</div>
-                <div className={
-                  `whitespace-pre-wrap rounded px-3 py-2 ` +
-                  (m.role === 'assistant' ? 'bg-white border' : 'bg-orange-50 border border-orange-200')
-                }>
-                  {m.content}
-                </div>
+    <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-br from-orange-50 via-white to-blue-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="mb-6"
+        >
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border-2 border-orange-200 shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
-            ))}
-            {loading && <div className="text-sm text-slate-500">Đang xử lý...</div>}
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                  Chatbot học tập
+                </h1>
+                <p className="text-slate-600 mt-1">
+                  {useGemini
+                    ? 'Trả lời bằng Gemini AI, có tìm kiếm trên web nếu cần'
+                    : 'Tìm kiếm từ khóa trong tài liệu hoặc trên web'}
+                </p>
+              </div>
+            </div>
           </Card>
-          <div className="mt-2 text-xs text-slate-500">
-            {useGemini
-              ? 'Trả lời bằng Gemini AI, có tìm kiếm trên web nếu cần.'
-              : 'Tìm kiếm từ khóa trong tài liệu hoặc trên web.'}
-          </div>
-          <div className="mt-3 flex gap-2">
-            <Input
-              placeholder="Nhập câu hỏi về bài học..."
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') ask(); }}
-              disabled={loading}
-            />
-            <Button
-              className="bg-orange-500 hover:bg-orange-600 text-white"
-              onClick={ask}
-              disabled={loading}
-            >
-              Hỏi
-            </Button>
-          </div>
-          <div className="text-xs text-slate-500 mt-2">
-            Trợ lý AI trả lời dựa trên tài liệu môn học hoặc kết quả tìm kiếm trên web.
-          </div>
-        </div>
+        </motion.div>
+
+        {/* Chat Messages */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-orange-200 shadow-xl mb-4">
+            <div className="h-[60vh] overflow-y-auto space-y-4 pr-2">
+              {messages.map((m, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-[80%] ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
+                    <div className={`text-xs mb-2 font-semibold ${
+                      m.role === 'assistant' ? 'text-orange-600' : 'text-slate-600'
+                    }`}>
+                      {m.role === 'assistant' ? 'Trợ lý' : 'Bạn'}
+                    </div>
+                    <div
+                      className={`whitespace-pre-wrap rounded-xl px-4 py-3 shadow-md ${
+                        m.role === 'assistant'
+                          ? 'bg-white border-2 border-orange-200 text-slate-800'
+                          : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30'
+                      }`}
+                    >
+                      {m.content}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+              {loading && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center gap-2 text-slate-500"
+                >
+                  <Sparkles className="w-4 h-4 animate-pulse text-orange-500" />
+                  <span className="text-sm">Đang xử lý...</span>
+                </motion.div>
+              )}
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Input Area */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="p-4 bg-white/80 backdrop-blur-sm border-2 border-orange-200 shadow-lg">
+            <div className="flex gap-3">
+              <Input
+                placeholder="Nhập câu hỏi về bài học..."
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') ask(); }}
+                disabled={loading}
+                className="flex-1 border-2 border-slate-200 focus:border-orange-500 focus:ring-orange-500"
+              />
+              <Button
+                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 shadow-lg shadow-orange-500/30"
+                onClick={ask}
+                disabled={loading}
+                size="lg"
+              >
+                <Send className="w-5 h-5 mr-2" />
+                Gửi
+              </Button>
+            </div>
+            <div className="text-xs text-slate-500 mt-3 text-center">
+              Trợ lý AI trả lời dựa trên tài liệu môn học hoặc kết quả tìm kiếm trên web.
+            </div>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );

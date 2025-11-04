@@ -26,11 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
       <body className={`${inter.variable} ${montserrat.variable} antialiased`}>
         <div className="min-h-screen flex flex-col">
           <Navbar />
-          <main className="flex-1 pt-16">
+          <main className="flex-1 pt-20">
             {children}
           </main>
           <Footer />
