@@ -1,16 +1,13 @@
-Failed to compile.
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./app/chat/page.tsx:161:1
+Parsing ecmascript source code failed
+  159 |   );
+  160 | }
+> 161 | }
+      | ^
 
-./app/chat/page.tsx:105:51
-Type error: Argument of type '{ contents: { text: string; }[]; }' is not assignable to parameter of type 'string | GenerateContentRequest | (string | Part)[]'.
-  Types of property 'contents' are incompatible.
-    Type '{ text: string; }[]' is not assignable to type 'Content[]'.
-      Type '{ text: string; }' is missing the following properties from type 'Content': role, parts
+Expression expected
 
-  103 |       const prompt = buildRagPrompt({ question: q, context });
-  104 |
-> 105 |       const result = await gemini.generateContent({ contents: prompt });
-      |                                                   ^
-  106 |       const response = result.response;
-  107 |       const text = response.text();
-  108 |
-Next.js build worker exited with code: 1 and signal: null
+
+    at <unknown> (./app/chat/page.tsx:161:1)
