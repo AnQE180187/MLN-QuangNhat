@@ -79,7 +79,7 @@ export function Navbar() {
                                     isScrolled ? 'text-lg' : 'text-xl'
                                 }`}
                             >
-                                MLN122
+                                Law102
                             </motion.h1>
                             <motion.p 
                                 className={`text-xs font-medium bg-gradient-to-r from-slate-500 to-slate-600 bg-clip-text text-transparent transition-all duration-300 ${

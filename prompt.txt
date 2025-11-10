@@ -1,4 +1,4 @@
-Thiết kế trang Nội dung học (Content Page) cho website học tập MLN122 – Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam theo phong cách slide trình chiếu cuộn dọc.
+Thiết kế trang Nội dung học (Content Page) cho website học tập law102 – Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam theo phong cách slide trình chiếu cuộn dọc.
 Mỗi phần nội dung là một “slide” toàn màn hình (full viewport height), khi người dùng scroll xuống thì thấy phần kế tiếp, giống trải nghiệm trình chiếu dọc.
 
 🎯 Mục tiêu thiết kế
@@ -7,7 +7,7 @@ Giao diện trình bày nội dung học như slide bài giảng sinh động, c
 
 Dễ đọc, trực quan, gây hứng thú khi học.
 
-Phù hợp để hiển thị 9 phần nội dung môn MLN122.
+Phù hợp để hiển thị 9 phần nội dung môn law102.
 
 Thanh mục lục (sidebar) được ẩn, chỉ mở khi bấm nút gần header.
 
@@ -34,7 +34,7 @@ Cảm giác: Trình bày chuyên nghiệp, sinh viên dễ xem như bài thuyế
 🧩 Cấu trúc trang
 🔹 Header cố định trên cùng
 
-Logo “MLN122” (text hoặc icon học tập).
+Logo “Law102” (text hoặc icon học tập).
 
 Tiêu đề nhỏ: “Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam”.
 

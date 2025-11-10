@@ -15,356 +15,56 @@ type Quiz = {
 };
 
 const quiz: Quiz[] = [
-  {
-    id: 'q1',
-    question: 'The power or authority of a court to hear cases is called its (...).',
-    options: ['Jurisdiction', 'Illegal right', 'None of all', 'Liberty right'],
-    answerIndex: 0,
-    explanation: 'Jurisdiction is the legal authority granted to a court to hear and decide cases.',
-  },
-  {
-    id: 'q2',
-    question: 'The common shareholder is an owner of (...).',
-    options: ['Common share(s)', 'Voting preference share(s)', 'Dividend preference share(s)', 'Redeemable preference share(s)'],
-    answerIndex: 0,
-    explanation: 'Common shareholders hold common shares, giving them ownership interests and voting rights.',
-  },
-  {
-    id: 'q3',
-    question: 'In all cases of delegation, the delegating party is (...) under the contract.',
-    options: ['Not liable', 'Partially liable', 'Fully liable', 'All answers are wrong'],
-    answerIndex: 2,
-    explanation: 'Delegating duties does not discharge the delegator; they remain fully liable unless a novation occurs.',
-  },
-  {
-    id: 'q4',
-    question: 'The basic relationship between government and citizen is defined by (...).',
-    options: ['Judicial decisions', 'Constitutions', 'Administrative agency orders', 'Ordinances'],
-    answerIndex: 1,
-    explanation: 'Constitutions establish the fundamental relationship between a government and its citizens.',
-  },
-  {
-    id: 'q5',
-    question: 'Tangible personal property is property that can be seen, touched, and possessed.',
-    options: ['True', 'False'],
-    answerIndex: 0,
-    explanation: 'By definition, tangible personal property has physical form and is perceptible by the senses.',
-  },
-  {
-    id: 'q6',
-    question: 'Contracts made by persons between 6–18 years old must always have consent of their representatives.',
-    options: ['False', 'True'],
-    answerIndex: 0,
-    explanation: 'Minors often may enter some contracts that are voidable, so representative consent is not always required.',
-  },
-  {
-    id: 'q7',
-    question: 'A merchant seller makes an implied ___ that the goods provided are fit for ordinary purposes.',
-    options: ['Warranty against infringement', 'Warranty of fitness', 'Warranty against encumbrances', 'Warranty of merchantability'],
-    answerIndex: 3,
-    explanation: 'The implied warranty of merchantability assures goods are fit for ordinary use when sold by merchants.',
-  },
-  {
-    id: 'q8',
-    question: 'In which case must the transferring party notify the other?',
-    options: ['Delegation', 'Assignment of business contract', 'Assignment of civil contract', 'Delegation and assignment of business contract'],
-    answerIndex: 3,
-    explanation: 'Both delegations and business contract assignments generally require notice to the other party.',
-  },
-  {
-    id: 'q9',
-    question: 'Number of board of management members (...).',
-    options: ['At least three', 'At least eleven', 'At least three but not more than eleven', 'At least three but not more than eleven unless otherwise provided by charter'],
-    answerIndex: 3,
-    explanation: 'Corporate charters may override the default range, so the board size follows the charter when allowed.',
-  },
-  {
-    id: 'q10',
-    question: 'Precedent applies if (...).',
-    options: ['Similarities found', 'Differences found', 'No law available', 'No rules good enough'],
-    answerIndex: 0,
-    explanation: 'Courts apply precedent when a prior decision involves materially similar facts and legal issues.',
-  },
-  {
-    id: 'q11',
-    question: 'When a contract does not state time, it must be carried out within (...).',
-    options: ['3 months', 'Unlimited time', 'A reasonable time', 'Obligated party decision'],
-    answerIndex: 2,
-    explanation: 'Where no time is specified, the law implies performance within a reasonable time.',
-  },
-  {
-    id: 'q12',
-    question: 'Who can call a special shareholders’ meeting?',
-    options: ['A specified number of stockholders', 'The police', 'The government', 'Anyone'],
-    answerIndex: 0,
-    explanation: 'Corporate statutes allow a defined portion of shareholders to demand a special meeting.',
-  },
-  {
-    id: 'q13',
-    question: 'A trademark gives the owner the (...).',
-    options: ['Exclusive duty', 'Exclusive right', 'Inclusive duty', 'Inclusive right'],
-    answerIndex: 1,
-    explanation: 'Trademarks confer exclusive rights to use the mark in commerce for the covered goods or services.',
-  },
-  {
-    id: 'q14',
-    question: 'To determine if personal property becomes real estate:',
-    options: ['(i) How securely attached', '(ii) Intention of installer', 'Both (i) and (ii)', 'Irrelevant'],
-    answerIndex: 2,
-    explanation: 'Both the method of annexation and the installer’s intent indicate whether an item becomes a fixture.',
-  },
-  {
-    id: 'q15',
-    question: 'Sale of goods ≥ $500 must be (...).',
-    options: ['In writing', 'Oral evidence allowed', 'Under seal', 'Under signature'],
-    answerIndex: 0,
-    explanation: 'The UCC Statute of Frauds requires a writing for sales of goods priced at $500 or more.',
-  },
-  {
-    id: 'q16',
-    question: 'The Supreme Court has original jurisdiction over cases involving (...).',
-    options: ['Any kind', 'Ambassadors, public ministers, consuls, and states as parties', 'Special matters only', 'Ambassadors only'],
-    answerIndex: 1,
-    explanation: 'The U.S. Constitution grants original jurisdiction in disputes involving diplomats and states.',
-  },
-  {
-    id: 'q17',
-    question: 'A director is held personally liable when (...).',
-    options: ['Loss caused by negligence or breach of good faith', 'Loss caused by external factors', 'Loss caused by best-interest action', 'Exercised due diligence'],
-    answerIndex: 0,
-    explanation: 'Directors face personal liability if their negligence or bad faith causes corporate losses.',
-  },
-  {
-    id: 'q18',
-    question: 'Ethical responsibilities often (...) legal requirements.',
-    options: ['Extend beyond', 'Restricted by', 'Equal to', 'Wrong'],
-    answerIndex: 0,
-    explanation: 'Ethical duties typically go beyond the minimum standards set by law.',
-  },
-  {
-    id: 'q19',
-    question: 'If an organization is aware of a problem and the public is not, it should (...).',
-    options: ['Delete it', 'Communicate and guide the public', 'Both right', 'Both wrong'],
-    answerIndex: 1,
-    explanation: 'Ethical crisis management calls for transparent communication and guidance for stakeholders.',
-  },
-  {
-    id: 'q20',
-    question: 'A person who initially forms a corporation is (...).',
-    options: ['Stockholder', 'Promoter', 'Incorporator', 'Director'],
-    answerIndex: 2,
-    explanation: 'Incorporators sign and file the charter documents that create the corporation.',
-  },
-  {
-    id: 'q21',
-    question: 'A description or sample made part of the sales contract creates (...).',
-    options: ['Implied warranty', 'Personal assurance', 'Express warranty', 'Full warranty'],
-    answerIndex: 2,
-    explanation: 'Descriptions or samples incorporated into the bargain form an express warranty.',
-  },
-  {
-    id: 'q22',
-    question: 'If contract time is not stated, performance must occur within (...).',
-    options: ['Reasonable time', 'Time fixed by party', 'Anytime', 'Time fixed by court'],
-    answerIndex: 0,
-    explanation: 'Courts infer a reasonable time for performance when none is specified by the parties.',
-  },
-  {
-    id: 'q23',
-    question: 'Until an offeror makes an offer known to an offeree, it cannot create (...).',
-    options: ['Binding offer', 'Terminated contract', 'Binding contract', 'Acceptance'],
-    answerIndex: 2,
-    explanation: 'Communication of the offer is necessary before a binding contract can form.',
-  },
-  {
-    id: 'q24',
-    question: 'Corporate existence is ignored when (...).',
-    options: ['Minor defect', 'Organized in another state', 'Filing not required', 'Serious defects invalidate formation'],
-    answerIndex: 3,
-    explanation: 'Courts pierce the corporate veil when serious formation defects justify disregarding the entity.',
-  },
-  {
-    id: 'q25',
-    question: 'Connecting stakeholder management and outcomes is the (...) approach.',
-    options: ['Descriptive', 'Normative', 'Instrumental', 'Strict'],
-    answerIndex: 2,
-    explanation: 'The instrumental approach examines how stakeholder management affects organizational outcomes.',
-  },
-  {
-    id: 'q26',
-    question: 'Courts expanded doctrine called (...).',
-    options: ['Fault', 'Strict liability', 'Duty of care', 'Interception'],
-    answerIndex: 1,
-    explanation: 'Modern tort law has broadened strict liability for defective or abnormally dangerous products.',
-  },
-  {
-    id: 'q27',
-    question: 'A founding shareholder signs the first charter.',
-    options: ['True', 'False'],
-    answerIndex: 0,
-    explanation: 'Initial or founding shareholders sign the charter to establish the corporation.',
-  },
-  {
-    id: 'q28',
-    question: 'Latest timeframe for annual general meeting of shareholders (GMS)?',
-    options: ['6 months', '1 month', '4 months', '5 months'],
-    answerIndex: 2,
-    explanation: 'Corporate law typically requires the annual GMS within four months after fiscal year end.',
-  },
-  {
-    id: 'q29',
-    question: 'Carbon footprint belongs to ___ impacts in the triple bottom line (TBL).',
-    options: ['Economic', 'Social', 'None', 'Environmental'],
-    answerIndex: 3,
-    explanation: 'Carbon footprint measures environmental impact within the TBL framework.',
-  },
-  {
-    id: 'q30',
-    question: 'A tort is (...).',
-    options: ['Always negligent', 'Prosecuted by district attorney', 'Civil wrong for which damages may be recovered', 'Failure to exercise reasonable care'],
-    answerIndex: 2,
-    explanation: 'A tort is a civil wrong remediable by damages, encompassing negligence and other wrongs.',
-  },
-  {
-    id: 'q31',
-    question: 'The offer must be (...).',
-    options: ['Stable', 'Bought', 'Definite', 'High'],
-    answerIndex: 2,
-    explanation: 'Contract offers must be definite enough that the parties’ obligations are clear.',
-  },
-  {
-    id: 'q32',
-    question: '“This is a good engine” is (...).',
-    options: ['Seller’s opinion', 'Express warranty', 'Implied warranty', 'Full warranty'],
-    answerIndex: 0,
-    explanation: 'Statements of puffery like “good engine” are opinions that do not create warranties.',
-  },
-  {
-    id: 'q33',
-    question: 'People forming a corporation are called (...).',
-    options: ['Incorporators', 'Judge', 'Prosecutor', 'Policeman'],
-    answerIndex: 0,
-    explanation: 'Those who execute and file incorporation documents are known as incorporators.',
-  },
-  {
-    id: 'q34',
-    question: 'Common stockholders have the right to (...).',
-    options: ['Control operations', 'Vote for board of directors', 'Control appointments', 'Control asset distribution'],
-    answerIndex: 1,
-    explanation: 'Common stockholders typically exercise governance through voting for directors.',
-  },
-  {
-    id: 'q35',
-    question: 'Dividend distribution is decided by (...).',
-    options: ['Board of management', 'Inspection committee', 'General meeting of shareholders', 'Legal representative'],
-    answerIndex: 2,
-    explanation: 'The general meeting of shareholders approves dividend declarations.',
-  },
-  {
-    id: 'q36',
-    question: 'A contract written not orally is a (...).',
-    options: ['Executed', 'Executory', 'Written contract', 'Oral contract'],
-    answerIndex: 2,
-    explanation: 'Contracts memorialized in writing are classified simply as written contracts.',
-  },
-  {
-    id: 'q37',
-    question: 'If price is fixed later by a third party, is the contract binding?',
-    options: ['Yes', 'No'],
-    answerIndex: 0,
-    explanation: 'Parties may agree to let a third party set price later, and such contracts remain binding.',
-  },
-  {
-    id: 'q38',
-    question: 'Powers to do acts reasonably necessary are called (...).',
-    options: ['Implied powers', 'Normal powers', 'Restricted powers', 'Limited powers'],
-    answerIndex: 0,
-    explanation: 'Implied powers allow agents or corporations to act in ways reasonably necessary to carry out express powers.',
-  },
-  {
-    id: 'q39',
-    question: 'A certificate is written evidence of (...) of stock.',
-    options: ['Ownership', 'Offer', 'Acceptance', 'Option'],
-    answerIndex: 0,
-    explanation: 'A stock certificate documents ownership of shares in a corporation.',
-  },
-  {
-    id: 'q40',
-    question: 'Common stock entitles the owner (...).',
-    options: ['To vote', 'To have special preference', 'To have no rights'],
-    answerIndex: 0,
-    explanation: 'Common stockholders usually possess voting rights on corporate governance matters.',
-  },
-  {
-    id: 'q41',
-    question: 'A business where members buy stocks and still are unlimitedly liable is (...).',
-    options: ['Joint-stock company', 'Joint venture', 'LLC', 'General partnership'],
-    answerIndex: 0,
-    explanation: 'In joint-stock companies, owners hold shares but may retain partnership-style liability.',
-  },
-  {
-    id: 'q42',
-    question: 'A seller is liable to compensate a buyer if (...).',
-    options: ['Damage occurs anytime', 'There’s a defect', 'Damage from defect during warranty period', 'Damage from defect anytime'],
-    answerIndex: 2,
-    explanation: 'Warranty law obligates sellers when defects cause loss during the promised warranty period.',
-  },
-  {
-    id: 'q43',
-    question: '“You’ll not be sorry if you buy this car” means (...).',
-    options: ['No warranty exists', 'Two warranties exist', 'One warranty exists'],
-    answerIndex: 0,
-    explanation: 'This puffery is opinion, so no express warranty arises.',
-  },
-  {
-    id: 'q44',
-    question: '“Pizza contains one pound of cheese” is (...) warranty.',
-    options: ['Express', 'Normal', 'Implied', 'Special'],
-    answerIndex: 0,
-    explanation: 'Specific factual statements about a product create express warranties.',
-  },
-  {
-    id: 'q45',
-    question: 'Can an offer be definite without price?',
-    options: ['Yes – market or third-party determines', 'No, must include price'],
-    answerIndex: 0,
-    explanation: 'If the parties reference market rates or third-party determinations, price need not be fixed initially.',
-  },
-  {
-    id: 'q46',
-    question: 'Which statement is NOT correct?',
-    options: ['Advertisement can be offer if clear', 'All ads and displays are invitations', 'Invitation to treat invites offer', 'Invitation to treat not binding'],
-    answerIndex: 1,
-    explanation: 'Not all advertisements are mere invitations; some can be offers, so saying all are invitations is incorrect.',
-  },
-  {
-    id: 'q47',
-    question: 'A contract where all parties promise entire performance is (...).',
-    options: ['Joint contract', 'Several contract', 'Joint and several', 'All choices'],
-    answerIndex: 0,
-    explanation: 'In a joint contract the parties jointly promise the entire performance obligation.',
-  },
-  {
-    id: 'q48',
-    question: 'A legal entity is liable if a member causes damage (...).',
-    options: ['During employment', 'During assigned work', 'To customer'],
-    answerIndex: 1,
-    explanation: 'Entities face vicarious liability for acts performed within the scope of assigned work.',
-  },
-  {
-    id: 'q49',
-    question: 'If Dad buys insurance paying you when he dies, you are (...).',
-    options: ['Creditor beneficiary', 'Donee beneficiary', 'Donor beneficiary', 'Incidental beneficiary'],
-    answerIndex: 1,
-    explanation: 'The named person receiving life insurance proceeds as a gift is a donee beneficiary.',
-  },
-  {
-    id: 'q50',
-    question: 'Novation means (...).',
-    options: ['Substituting a new party by mutual agreement', 'Transfer of rights only', 'Transfer of duties only', 'Original obligor remains liable'],
-    answerIndex: 0,
-    explanation: 'A novation substitutes a new obligor and releases the original party by agreement.',
-  },
+  { id: 'q150', question: 'Acceptance to an offer results in a ( )', options: ['Counteroffer','Contract','Counter acceptance','Invalid contract'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q151', question: "The offeree may make an inquiry about terms that differ from the offer's terms without rejecting the offer.", options: ['True','False'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q152', question: 'The duration of an offer is affected by (.)', options: ['Death or insanity of the offeror','Rejection of an offer by the offeree','The lapse of the time specified in the offer','All the choices'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q153', question: 'May sends a message offering to sell a laptop for $500. John offers $400, then accepts $500 after refusal. Which statement is correct?', options: ['An offer made by May and accepted by John','An offer made by John and accepted by May','May’s first statement is an invitation to treat','John’s second statement is an offer to buy for $500'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q154', question: 'No warranty of title arises when the seller makes the sale in ( )', options: ['A representative capacity','A meeting','A fair','Normal situations'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q155', question: 'Inferior Court ( )', options: ['Handles estates','Handles delinquent children','Handles divorce cases','Trial court hearing minor offenses and disputes'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q156', question: 'Personal property attached securely to real estate is called ( )', options: ['Cars','Fixture','All of the choices','Cups'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q157', question: 'Which of the following does NOT amount to a valid offer?', options: ['Offer must be definite','Offer must appear serious','Offer must be communicated','Offer must be accepted by offeree'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q158', question: 'The offer must be communicated to the offeree.', options: ['True','False'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q159', question: 'As a general rule, which party’s right under a contract may be assigned?', options: ['Only rights to negotiable instruments','Only rights to monetary damages','All rights','No rights, only duties'], answerIndex: 2, explanation: 'Đáp án đúng: C' },
+  { id: 'q160', question: 'If your dad buys insurance that pays you $200,000 when he dies, you are:', options: ['Promisor','Promisee','Incidental third-party beneficiary','Intended third-party beneficiary'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q161', question: 'The party making the assignment is known as (...)', options: ['Assignor','Assignee','Promisor','Third-party beneficiary'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q162', question: 'A contract made by a person adjudicated incompetent will be treated:', options: ['Depending on the parties’ will','Void, regardless of fairness','Valid','Voidable'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q163', question: 'In Vietnam, offer and acceptance are governed by (...)', options: ['Civil Code 2005','Enterprise Law 2005','Constitution','Land Law'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q164', question: 'If no performance time stated, it must be performed (...)', options: ['Within a reasonable time','Within time agreed by parties','At any time','None of the choices'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q165', question: 'The U.S. Supreme Court (...)', options: ['Has no original jurisdiction','Has appellate jurisdiction in cases based on Constitution, federal law, or treaty','Does not hear direct appeals','Must take all appeals'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q166', question: 'Transferring contractual duties to another person is called (...)', options: ['Delegation','Novation','Assignment','Promise'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q167', question: 'Which of the following are NOT obligated to the contract terms?', options: ['Promisor','Promisee','Third-party beneficiary','Contractual party'], answerIndex: 2, explanation: 'Đáp án đúng: C' },
+  { id: 'q168', question: 'Force Majeure Clause means (...)', options: ['Excuses performance when extraordinary event occurs','Announcing intention not to perform','Failure to perform obligation','Time limit for lawsuit'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q169', question: 'If stock is 7% nonparticipating, it means (...)', options: ['7% is the maximum preferred dividend regardless of profits','7% plus 7% of common stock','7% is the minimum return','7% plus profit share'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q170', question: 'In Vietnam, the Constitution is enacted by (...)', options: ['The Government','The Supreme People’s Court','The National Assembly','The People'], answerIndex: 2, explanation: 'Đáp án đúng: C' },
+  { id: 'q171', question: 'If contract doesn’t specify time for performance, it must be completed (...)', options: ['Within a reasonable time','At any time','Before statute of limitations','Within 3 years'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q172', question: 'Which of the following is NOT a cause of discharge by impossibility?', options: ['Destruction of subject matter','New laws make contract illegal','Death of service performer','Alteration of written contract'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q173', question: 'According to Civil Code 2015, limitation period for contract disputes is (...)', options: ['Three years','Two years','Four years','Five years'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q174', question: 'A civil contract shall be terminated in any of the following EXCEPT:', options: ['Contract completed','Subject matter no longer exists','Parties agree','One party breached the contract'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q175', question: 'All sellers, by selling, make (...) that they have good titles.', options: ['A warranty','An offer','A private assurance','A registration'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q176', question: 'Under Vietnamese law, when one transfers rights, notice must be given in (...)', options: ['Oral','Written','Conduct','Any form'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q177', question: 'Corporate social responsibility ideally focuses ( ) on social good of products.', options: ['Managers','Stakeholders','Government','Owners'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q178', question: 'Written agreements to buy stock before incorporation are called (...)', options: ['Stock Agreement','Subscription Agreement','Promoter’s Agreement','Capital Agreement'], answerIndex: 1, explanation: 'Đáp án đúng: B' },
+  { id: 'q179', question: 'Which statement is NOT true about sole proprietorships?', options: ['Personally liable for debts','Owns all assets and profits','Full control of operations','Financial risk limited to investment'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q180', question: 'Partnership is defined as (...)', options: ['Association of 2+ people to carry on business for profit','Association to conduct nonprofit profession','Association to form trade union','All choices'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q181', question: 'Which right is NOT an incidental power of a corporation?', options: ['Engage in legal actions','Have corporate seal','Have continuous existence','Mortgage or lease property'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q182', question: 'Which is NOT an advantage of corporate form?', options: ['Pool capital','Limited liability','Death doesn’t dissolve company','Majority shareholders have sole voice'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q183', question: 'If two Californians have a civil controversy, proper venue is (...)', options: ['California','New York','Outside California','Anywhere in US'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q184', question: 'Which is an intangible personal property?', options: ['Copyrights','Merchandise','Animals','Furniture'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q185', question: 'The supreme law defining government-citizen relations in the U.S. is (...)', options: ['Constitution','Statutes','Bylaws','Bill of Rights'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q186', question: 'Which is tangible personal property?', options: ['Savings account certificates','Copyrights','Checks','Furniture'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q187', question: 'In ___, the parties express intentions in writing.', options: ['Written contract','Oral contract','Implied contract','Oral and executory contract'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q188', question: '___ uses the common law system.', options: ['Vietnam','France','Laos','The U.S.'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q189', question: 'If property becomes part of real estate (like house bricks), it’s a fixture.', options: ['True','False'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q190', question: 'Laws enabling a state to have jurisdiction over nonresidents are called (...)', options: ['Long-arm Statutes','State Statutes','Criminal Law','Public Law'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q191', question: 'Improperly confining a person is (...)', options: ['Battery','Trespass','False imprisonment','Assault'], answerIndex: 2, explanation: 'Đáp án đúng: C' },
+  { id: 'q192', question: 'In the U.S., commissions or boards regulating specific matters are (...)', options: ['Administrative agencies','Long-arm Statutes','Bylaws','Statutes'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q193', question: 'The authority of a court to hear cases is its (...)', options: ['Jurisdiction','Statutes','Criminal law','Constitution'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q194', question: 'Methods of acquiring personal property do NOT include (...)', options: ['Theft','Descent','Confusion','Accession'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q195', question: '___ involves putting a person in fear of wrongful touching.', options: ['Assault','Trespass','False imprisonment','Battery'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q196', question: 'Common law and equity law in the U.S. originated from (...)', options: ['France','Russia','England','Germany'], answerIndex: 2, explanation: 'Đáp án đúng: C' },
+  { id: 'q197', question: 'Every seller makes a warranty that goods shall be delivered (...) security interest.', options: ['Free from any','Full of','Containing any','With any'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
+  { id: 'q198', question: 'According to Vietnamese law, real property includes (...)', options: ['Motorbike','Chicken','Horse','Property attached securely to land'], answerIndex: 3, explanation: 'Đáp án đúng: D' },
+  { id: 'q199', question: 'A party to a contract may assign rights or delegate duties or both.', options: ['True','False'], answerIndex: 0, explanation: 'Đáp án đúng: A' },
 ];
 
 export default function QuizPage() {
@@ -383,9 +83,10 @@ export default function QuizPage() {
   const isLastQuestion = currentQuestion === quiz.length - 1;
 
   useEffect(() => {
-    if (gameFinished && score === quiz.length) {
+    if (gameFinished) {
+      // Show confetti/fireworks whenever the quiz is finished
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 3000);
+      setTimeout(() => setShowConfetti(false), 4000);
     }
   }, [gameFinished, score]);
 
@@ -502,21 +203,35 @@ export default function QuizPage() {
           className="max-w-2xl w-full"
         >
           <Card className="p-8 md:p-12 text-center bg-white/80 backdrop-blur-sm border-2 border-orange-200 shadow-2xl">
-            {showConfetti && (
-              <div className="fixed inset-0 pointer-events-none z-50">
-                {[...Array(50)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ y: -100, x: Math.random() * window.innerWidth, opacity: 1 }}
-                    animate={{ y: window.innerHeight + 100, opacity: 0 }}
-                    transition={{ duration: 3, delay: Math.random() * 2 }}
-                    className="absolute"
-                  >
-                    <Sparkles className="w-6 h-6 text-orange-500" />
-                  </motion.div>
-                ))}
+              {showConfetti && (
+                <div className="fixed inset-0 pointer-events-none z-50">
+                  {[...Array(80)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ y: -100, x: Math.random() * window.innerWidth, opacity: 1 }}
+                      animate={{ y: window.innerHeight + 100, opacity: 0 }}
+                      transition={{ duration: 3, delay: Math.random() * 2 }}
+                      className="absolute"
+                    >
+                      <Sparkles className="w-6 h-6 text-orange-500" />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+
+              {/* Congratulation image: place your image at /public/congrats.jpg to show here */}
+              <div className="mb-6">
+                <img
+                  src="/congrats.jpg"
+                  alt="Chúc mừng"
+                  className="mx-auto w-48 h-48 object-cover rounded-full mb-4 shadow-2xl"
+                  onError={(e) => {
+                    // Hide broken image if not present
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.style.display = 'none';
+                  }}
+                />
               </div>
-            )}
             
             <motion.div
               initial={{ scale: 0 }}

@@ -16,8 +16,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "MLN122 - Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam",
-  description: "Website học tập môn MLN122 - Đại học FPT Quy Nhơn",
+  title: "Law102 - Các Quan Hệ Lợi Ích Kinh Tế Ở Việt Nam",
+  description: "Website học tập môn Law102 - Đại học FPT Quy Nhơn",
 };
 
 export default function RootLayout({

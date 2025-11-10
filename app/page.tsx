@@ -157,7 +157,7 @@ export default function Home() {
             >
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500/10 to-orange-600/10 border border-orange-200 rounded-full text-orange-600 font-medium text-sm">
                 <Star className="w-4 h-4 fill-orange-500 text-orange-500" />
-                Khóa học MLN122 - Đại học FPT Quy Nhơn
+                Khóa học Law102 - Đại học FPT Quy Nhơn
               </span>
             </motion.div>
 
