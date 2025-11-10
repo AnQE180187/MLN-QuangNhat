@@ -123,10 +123,9 @@ export default function QuizPage() {
 
   const letterToIndex = (letter: string) => {
     const upper = letter.trim().toUpperCase();
-    if (upper === 'A') return 0;
-    if (upper === 'B') return 1;
-    if (upper === 'C') return 2;
-    if (upper === 'D') return 3;
+    const code = upper.charCodeAt(0);
+    // Support A-Z → 0-25
+    if (code >= 65 && code <= 90) return code - 65;
     return -1;
   };
 
@@ -140,16 +139,13 @@ export default function QuizPage() {
 
     for (let i = 0; i < blocks.length; i++) {
       const lines = blocks[i].split('\n').map(l => l.trim()).filter(Boolean);
-      if (lines.length < 6) {
-        throw new Error(`Khối ${i + 1} thiếu dòng (tối thiểu câu hỏi, 4 lựa chọn, đáp án).`);
-      }
 
       // Question line like: (198) According to ...
       const qMatch = lines[0].match(/^\(\d+\)\s*(.+)$/);
       const question = (qMatch ? qMatch[1] : lines[0]).trim();
 
-      // Options start with A./B./C./D.
-      const optionRegex = /^[A-Da-d]\.\s*(.+)$/;
+      // Options start with A./B./C./... (support A-Z)
+      const optionRegex = /^[A-Za-z]\.\s*(.+)$/;
       const options: string[] = [];
       let answerLineIndex = -1;
 
@@ -164,15 +160,16 @@ export default function QuizPage() {
         }
       }
 
-      if (options.length < 2) {
-        throw new Error(`Khối ${i + 1} thiếu lựa chọn (ít nhất 2).`);
+      // Allow any number of options >= 1
+      if (options.length < 1) {
+        throw new Error(`Khối ${i + 1} thiếu lựa chọn (ít nhất 1).`);
       }
 
       const answerTail = lines.slice(answerLineIndex >= 0 ? answerLineIndex : lines.length - 1).join(' ');
-      const ansMatch = answerTail.match(/(?:Đáp\s*án|Answer)\s*:\s*([A-Da-d])/);
+      const ansMatch = answerTail.match(/(?:Đáp\s*án|Answer)\s*:\s*([A-Za-z])/);
       const ansIdx = ansMatch ? letterToIndex(ansMatch[1]) : -1;
       if (ansIdx < 0 || ansIdx >= options.length) {
-        throw new Error(`Khối ${i + 1} thiếu hoặc sai định dạng đáp án (A/B/C/D).`);
+        throw new Error(`Khối ${i + 1} thiếu hoặc sai định dạng đáp án (A-Z) hoặc vượt quá số lựa chọn.`);
       }
 
       results.push({
@@ -669,7 +666,7 @@ export default function QuizPage() {
           <Card className="relative z-10 w-full max-w-3xl p-6 bg-white border-2 border-pink-200">
             <h3 className="text-xl font-bold mb-2">Thêm câu hỏi theo mẫu</h3>
             <p className="text-sm text-slate-600 mb-4">
-              Dán tối đa 50 câu/lần. Mẫu:
+              Dán tối đa 50 câu/lần. Mẫu (số đáp án tùy ý: A., B., C., D., E., ...):
               <br />
               (198) According to Vietnamese law, real property includes (...)
               <br />
