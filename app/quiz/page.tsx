@@ -85,6 +85,23 @@ export default function QuizPage() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importMode, setImportMode] = useState<'append' | 'replace'>('replace');
   const [revealScoreAtEnd, setRevealScoreAtEnd] = useState(true);
+  const [otherSets, setOtherSets] = useState<Array<{id: string; name: string; questions: Quiz[]}>>([]);
+  const [showOtherSets, setShowOtherSets] = useState(false);
+
+  // Load other question sets from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('mln_other_question_sets');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          setOtherSets(parsed);
+        }
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
 
   const currentQ = quiz[currentQuestion];
   const progress = ((currentQuestion + 1) / quiz.length) * 100;
@@ -192,6 +209,21 @@ export default function QuizPage() {
     try {
       setImportError(null);
       const parsed = parseImportedQuestions(importText);
+      
+      // Save to other question sets storage
+      try {
+        const existingSets = JSON.parse(localStorage.getItem('mln_other_question_sets') || '[]');
+        const newSet = {
+          id: `set_${Date.now()}`,
+          name: `Bộ câu hỏi ${existingSets.length + 1}`,
+          questions: parsed
+        };
+        existingSets.push(newSet);
+        localStorage.setItem('mln_other_question_sets', JSON.stringify(existingSets));
+      } catch (e) {
+        console.error('Failed to save to other sets:', e);
+      }
+
       let next: Quiz[];
       if (importMode === 'append') {
         next = [...quiz, ...parsed].slice(0, 50);
@@ -267,9 +299,74 @@ export default function QuizPage() {
     return 'Cần cố gắng thêm! Hãy xem lại nội dung!';
   };
 
+  // Function to load a question set
+  const handleLoadQuestionSet = (questions: Quiz[]) => {
+    setQuiz(questions);
+    setShowOtherSets(false);
+    setGameStarted(false);
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setAnswers({});
+    setScore(0);
+    setStreak(0);
+  };
+
+  // Function to delete a question set
+  const handleDeleteQuestionSet = (setId: string) => {
+    const newSets = otherSets.filter(set => set.id !== setId);
+    setOtherSets(newSets);
+    localStorage.setItem('mln_other_question_sets', JSON.stringify(newSets));
+  };
+
   if (!gameStarted) {
     return (
       <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-br from-pink-50 via-white to-pink-100 flex items-center justify-center p-4">
+        {showOtherSets && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto">
+              <h2 className="text-2xl font-bold mb-4 text-pink-600">Bộ câu hỏi đã lưu</h2>
+              {otherSets.length === 0 ? (
+                <p className="text-slate-600">Chưa có bộ câu hỏi nào được lưu.</p>
+              ) : (
+                <div className="space-y-4">
+                  {otherSets.map((set) => (
+                    <div key={set.id} className="border rounded-lg p-4 flex justify-between items-center">
+                      <div>
+                        <h3 className="font-semibold text-lg">{set.name}</h3>
+                        <p className="text-slate-600">{set.questions.length} câu hỏi</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          className="border-2 border-pink-500 text-pink-600 hover:bg-pink-50"
+                          onClick={() => handleLoadQuestionSet(set.questions)}
+                        >
+                          Chọn
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="border-2 border-red-500 text-red-600 hover:bg-red-50"
+                          onClick={() => handleDeleteQuestionSet(set.id)}
+                        >
+                          Xóa
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="outline"
+                  className="border-2 border-slate-300"
+                  onClick={() => setShowOtherSets(false)}
+                >
+                  Đóng
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -321,13 +418,22 @@ export default function QuizPage() {
                   />
                   <span>Chỉ hiện điểm khi hoàn thành toàn bộ</span>
                 </label>
-                <Button
-                  variant="outline"
-                  className="border-2 border-pink-500 text-pink-600 hover:bg-pink-50"
-                  onClick={() => setImportOpen(true)}
-                >
-                  Thêm câu hỏi (tối đa 50/lần)
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    className="border-2 border-pink-500 text-pink-600 hover:bg-pink-50"
+                    onClick={() => setImportOpen(true)}
+                  >
+                    Thêm câu hỏi (tối đa 50/lần)
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-2 border-pink-500 text-pink-600 hover:bg-pink-50"
+                    onClick={() => setShowOtherSets(true)}
+                  >
+                    Bộ câu hỏi khác ({otherSets.length})
+                  </Button>
+                </div>
               </div>
             </motion.div>
           </Card>
